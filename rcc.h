@@ -1,5 +1,5 @@
 /*
- * rcc.h
+ * rcc.h header file
  *
  *  Created on: Aug 22, 2023
  *      Author: meteh

@@ -1,5 +1,5 @@
 /*
- * stm32L1_device.h
+ * stm32L1_device.h device specific header file 
  *
  *  Created on: Aug 21, 2023
  *      Author: metehan.cakmak
