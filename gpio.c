@@ -18,40 +18,41 @@ void GPIO_Init(GPIO_TypeDef_t *GPIOx, GPIO_InitTypeDef_t *GPIO_Config)
 	{
 		fake_position = (0x1U << position);
 		last_position = (GPIO_Config->pinNumber) & fake_position;
-
-	}
-
-	if(fake_position == last_position)
-	{
-
-		/* Mode Config */
-
-		uint32_t temp_value = GPIOx->MODER;
-		temp_value &= ~(0x3U << (position * 2));							//clear bits
-		temp_value |= (GPIO_Config->Mode << (position * 2));				//set bits
-		GPIOx->MODER = temp_value;
-
-		if(GPIO_Config->Mode == GPIO_MODE_INPUT || GPIO_Config->Mode == GPIO_MODE_ANALOG)
+		if(fake_position == last_position)
 		{
-			/* Output Type Config */
-			temp_value = GPIOx->OTYPER;
-			temp_value &= ~(0x1 << position);								//clear bit
-			temp_value |= (GPIO_Config->Otype << position);					//set bit
-			GPIOx->OTYPER = temp_value;
 
-			/* Output Speed Config */
-			temp_value = GPIOx->OSPEEDR;
-			temp_value &= ~(0x3U) << (position * 2);						//clear bits
-			temp_value |= (GPIO_Config->Speed << (position * 2));			//set bits
-			GPIOx->OSPEEDR = temp_value;
+			/* Mode Config */
+
+			uint32_t temp_value = GPIOx->MODER;
+			temp_value &= ~(0x3U << (position * 2));							//clear bits
+			temp_value |= (GPIO_Config->Mode << (position * 2));				//set bits
+			GPIOx->MODER = temp_value;
+
+			if(GPIO_Config->Mode == GPIO_MODE_INPUT || GPIO_Config->Mode == GPIO_MODE_ANALOG)
+			{
+				/* Output Type Config */
+				temp_value = GPIOx->OTYPER;
+				temp_value &= ~(0x1 << position);								//clear bit
+				temp_value |= (GPIO_Config->Otype << position);					//set bit
+				GPIOx->OTYPER = temp_value;
+
+				/* Output Speed Config */
+				temp_value = GPIOx->OSPEEDR;
+				temp_value &= ~(0x3U) << (position * 2);						//clear bits
+				temp_value |= (GPIO_Config->Speed << (position * 2));			//set bits
+				GPIOx->OSPEEDR = temp_value;
+			}
+			/* Push Pull Config */
+			temp_value = GPIOx->PUPDR;
+			temp_value &= ~(0x3U) << (position * 2);
+			temp_value |= (GPIO_Config->PuPd << (position * 2));
+			GPIOx->PUPDR = temp_value;
+
 		}
-		/* Push Pull Config */
-		temp_value = GPIOx->PUPDR;
-		temp_value &= ~(0x3U) << (position * 2);
-		temp_value |= (GPIO_Config->PuPd << (position * 2));
-		GPIOx->PUPDR = temp_value;
 
 	}
+
+
 
 }
 
