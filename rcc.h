@@ -18,14 +18,14 @@
 #define RCC_GPIOB_CLOCK_ENABLE()		do{	__IO uint32_t temp;									\
 											SET_BIT(RCC->AHBENR, RCC_AHBENR_GPIOBEN);			\
 											temp = READ_BIT(RCC->AHBENR, RCC_AHBENR_GPIOBEN);	\
-											UNUSED(temp);\
+											UNUSED(temp);										\
 										}while(0)
-#define __HAL_RCC_GPIOA_CLK_ENABLE()   do { \
-                                        __IO uint32_t tmpreg; \
-                                        SET_BIT(RCC->AHBENR, RCC_AHBENR_GPIOAEN);\
-                                        /* Delay after an RCC peripheral clock enabling */\
-                                        tmpreg = READ_BIT(RCC->AHBENR, RCC_AHBENR_GPIOAEN);\
-                                        UNUSED(tmpreg); \
+#define __HAL_RCC_GPIOA_CLK_ENABLE()   do { 													\
+                                        __IO uint32_t tmpreg; 									\
+                                        SET_BIT(RCC->AHBENR, RCC_AHBENR_GPIOAEN);				\
+                                        /* Delay after an RCC peripheral clock enabling */		\
+                                        tmpreg = READ_BIT(RCC->AHBENR, RCC_AHBENR_GPIOAEN);		\
+                                        UNUSED(tmpreg); 										\
                                       } while(0U)
 
 #define RCC_GPIOC_CLOCK_ENABLE()		do{	uint32_t temp = 0;									\
@@ -70,6 +70,24 @@
 											UNUSED(temp);										 \
 										}while(0)
 
+#define RCC_SPI1_CLK_ENABLE()			do{	uint32_t temp = 0;									 \
+											SET_BIT(RCC->APB2ENR, RCC_APB2ENR_SPI1);			 \
+											temp = READ_BIT(RCC->APB2ENR, RCC_APB2ENR_SPI1); 	 \
+											UNUSED(temp);										 \
+										}while(0)
+
+#define RCC_SPI2_CLK_ENABLE()			do{	uint32_t temp = 0;									 \
+											SET_BIT(RCC->APB1ENR, RCC_APB1ENR_SPI2);			 \
+											temp = READ_BIT(RCC->APB1ENR, RCC_APB1ENR_SPI2); 	 \
+											UNUSED(temp);										 \
+										}while(0)
+
+#define RCC_SPI3_CLK_ENABLE()			do{	uint32_t temp = 0;									 \
+											SET_BIT(RCC->APB1ENR, RCC_APB2ENR_SPI2);			 \
+											temp = READ_BIT(RCC->APB1ENR, RCC_APB2ENR_SPI2); 	 \
+											UNUSED(temp);										 \
+										}while(0)
+
 #define RCC_GPIOA_CLOCK_DISABLE()		CLEAR_BIT(RCC->AHBENR, RCC_AHBENR_GPIOAEN)
 #define RCC_GPIOB_CLOCK_DISABLE()		CLEAR_BIT(RCC->AHBENR, RCC_AHBENR_GPIOBEN)
 #define RCC_GPIOC_CLOCK_DISABLE()		CLEAR_BIT(RCC->AHBENR, RCC_AHBENR_GPIOCEN)
@@ -80,4 +98,8 @@
 #define RCC_GPIOH_CLOCK_DISABLE()		CLEAR_BIT(RCC->AHBENR, RCC_AHBENR_GPIOHEN)
 
 #define RCC_SYSCFG_CLK_DISABLE()		CLEAR_BIT((RCC->APB2ENR, RCC_APB2ENR_SYSCFGEN)
+
+#define RCC_SPI1_CLK_DISABLE()			CLEAR_BIT(RCC->APB2ENR, RCC_APB2ENR_SPI1)
+#define RCC_SPI2_CLK_DISABLE()			CLEAR_BIT(RCC->APB1ENR, RCC_APB1ENR_SPI2)
+#define RCC_SPI3_CLK_DISABLE()			CLEAR_BIT(RCC->APB1ENR, RCC_APB2ENR_SPI3)
 #endif /* INC_RCC_H_ */

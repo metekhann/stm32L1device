@@ -22,14 +22,15 @@ void GPIO_Init(GPIO_TypeDef_t *GPIOx, GPIO_InitTypeDef_t *GPIO_Config)
 		{
 
 			/* Mode Config */
-
 			uint32_t temp_value = GPIOx->MODER;
 			temp_value &= ~(0x3U << (position * 2));							//clear bits
 			temp_value |= (GPIO_Config->Mode << (position * 2));				//set bits
 			GPIOx->MODER = temp_value;
 
-			if(GPIO_Config->Mode == GPIO_MODE_INPUT || GPIO_Config->Mode == GPIO_MODE_ANALOG)
+
+			if(GPIO_Config->Mode == GPIO_MODE_OUTPUT || GPIO_Config->Mode == GPIO_MODE_ALTERNATE)
 			{
+
 				/* Output Type Config */
 				temp_value = GPIOx->OTYPER;
 				temp_value &= ~(0x1 << position);								//clear bit
@@ -42,29 +43,36 @@ void GPIO_Init(GPIO_TypeDef_t *GPIOx, GPIO_InitTypeDef_t *GPIO_Config)
 				temp_value |= (GPIO_Config->Speed << (position * 2));			//set bits
 				GPIOx->OSPEEDR = temp_value;
 			}
+
 			/* Push Pull Config */
 			temp_value = GPIOx->PUPDR;
 			temp_value &= ~(0x3U) << (position * 2);
 			temp_value |= (GPIO_Config->PuPd << (position * 2));
 			GPIOx->PUPDR = temp_value;
 
+			if(GPIO_Config->Mode == GPIO_MODE_ALTERNATE)
+			{
+				temp_value = GPIOx->AFR[position >> 3U];
+				temp_value &= ~(0xFU << ( (position & 0x7U) *4 ) );
+				temp_value |= (GPIO_Config->Alternate << ( (position & 0x7U) * 4) );
+				GPIOx->AFR[position >> 3U] = temp_value;
+			}
 		}
 
+
+
 	}
-
-
-
 }
 
 void GPIO_WritePin(GPIO_TypeDef_t *GPIOx, uint16_t pinNumber, GPIO_PinState_t pinState )
 {
 	if(pinState == GPIO_Pin_Set)
 	{
-		GPIOx->BSRR = pinNumber;
+		GPIOx->BSRR |= pinNumber;
 	}
 	else
 	{
-		GPIOx->BSRR = (pinNumber << 16);
+		GPIOx->BSRR |= (pinNumber << 16);
 	}
 }
 

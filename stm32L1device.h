@@ -39,6 +39,7 @@ typedef enum
 	EXTI2_IRQNumber = 8,
 	EXTI3_IRQNumber = 9,
 	EXTI4_IRQNumber = 10,
+	EXTI15_10_IRQNumber = 40,
 
 }IRQ_Number_TypeDef_t;
 
@@ -144,8 +145,7 @@ typedef struct
 	__IO uint32_t ODR;					/*!< GPIO port output data register Address Offset 				:0x14    > 	*/
 	__IO uint32_t BSRR;					/*!< GPIO port bit set/reset register Address Offset 			:0x18    > 	*/
 	__IO uint32_t LCKR;					/*!< GPIO port mode configuration lock Address Offset  		    :0x1C    > 	*/
-	__IO uint32_t AFRL;					/*!< GPIO port alternate function low register Address Offset   :0x20    > 	*/
-	__IO uint32_t AFRH;					/*!< GPIO port alternate function high register Address Offset  :0x24    >  */
+	__IO uint32_t AFR[2];					/*!< GPIO port alternate function register Address Offset   :0x20    > 	*/
 	__IO uint32_t BRR;					/*!< GPIO port bit reset register Address Offset  				:0x28    > 	*/
 
 }GPIO_TypeDef_t;
@@ -181,14 +181,30 @@ typedef struct
 
 typedef struct
 {
-	__IO uint32_t IMR;					/*!< EXTI interrupt mask register Address Offset				: 0x00 >*/
-	__IO uint32_t EMR;					/*!< EXTI event mask register Address Offset					: 0x04 >*/
-	__IO uint32_t RTSR;					/*!< EXTI rising edge trigger selection register Address Offset : 0x08 >*/
-	__IO uint32_t FTSR;					/*!< EXTI falling edge trigger selection register Address Offset: 0x0C >*/
-	__IO uint32_t SWIER;				/*!< EXTI software interrupt event register Address Offset		: 0x10 >*/
-	__IO uint32_t PR;					/*!< EXTI pending register Address Offset						: 0x14 >*/
+	__IO uint32_t IMR;					/*!< EXTI interrupt mask register Address Offset				: 0x00 >	*/
+	__IO uint32_t EMR;					/*!< EXTI event mask register Address Offset					: 0x04 >	*/
+	__IO uint32_t RTSR;					/*!< EXTI rising edge trigger selection register Address Offset : 0x08 >	*/
+	__IO uint32_t FTSR;					/*!< EXTI falling edge trigger selection register Address Offset: 0x0C >	*/
+	__IO uint32_t SWIER;				/*!< EXTI software interrupt event register Address Offset		: 0x10 >	*/
+	__IO uint32_t PR;					/*!< EXTI pending register Address Offset						: 0x14 >	*/
 
 }EXTI_TypeDef_t;
+
+typedef struct
+{
+	__IO uint32_t CR1;					/*!< SPI control register 1 Address Offset 		   :0x00 >	*/
+	__IO uint32_t CR2;					/*!< SPI control register 2 Address Offset 		   :0x04 >	*/
+	__IO uint32_t SR;					/*!< SPI status register Address Offset 		   :0x08 >	*/
+	__IO uint32_t DR;					/*!< SPI data register Address Offset 			   :0x0C >	*/
+	__IO uint32_t CRCPR;				/*!< SPI CRC polynomial register Address Offset    :0x10 >	*/
+	__IO uint32_t RXCRCR;				/*!< SPI RX CRC register Address Offset 		   :0x14 >	*/
+	__IO uint32_t TXCRCR;				/*!< SPI TX CRC register Address Offset 		   :0x18 >	*/
+	__IO uint32_t I2SCFGR;				/*!< SPI I2C configuration register Address Offset :0x1C >	*/
+	__IO uint32_t I2SPR;				/*!< SPI I2C prescaler register Address Offset 	   :0x20 >	*/
+
+
+
+}SPI_TypeDef_t;
 
 
 /*
@@ -210,6 +226,8 @@ typedef struct
 #define SYSCFG							((SYSCFG_TypeDef_t *)(SYSCFG_BASE_ADRR)	)
 
 #define EXTI							((EXTI_TypeDef_t *)(EXTI_BASE_ADRR)		)
+#define SPI1							((SPI_TypeDef_t *) (SPI1_BASE_ADRR)		)
+#define SPI2							((SPI_TypeDef_t *) (SPI2_BASE_ADRR)		)
 
 /*
  * Bit definitions
@@ -252,7 +270,32 @@ typedef struct
 #define RCC_APB2ENR_SYSCFGEN_MSK		(0x1 << RCC_APB2ENR_SYSCFGEN_POS)	//RCC APB2ENR register SYSCFGEN Bit Mask
 #define RCC_APB2ENR_SYSCFGEN			(RCC_APB2ENR_SYSCFGEN_MSK)			//RCC APB2ENR register SYSCFGEN Bit Macro
 
+#define RCC_APB2ENR_SPI1_POS			(12U)								// RCC APB2ENR register SPI1EN Bit Position
+#define RCC_APB2ENR_SPI1_MSK			(0x1 << RCC_APB2ENR_SPI1_POS)		// RCC APB2ENR register SPI1EN Bit Mask
+#define RCC_APB2ENR_SPI1				(RCC_APB2ENR_SPI1_MSK)				// RCC APB2ENR register SPI1EN Bit
+
+#define RCC_APB1ENR_SPI2_POS			(14U)								// RCC APB1ENR register SPI2EN Bit Position
+#define RCC_APB1ENR_SPI2_MSK			(0x1 << RCC_APB1ENR_SPI2_POS)		// RCC APB1ENR register SPI2EN Bit Mask
+#define RCC_APB1ENR_SPI2				(RCC_APB1ENR_SPI2_MSK)				// RCC APB1ENR register SPI2EN Bit
+
+#define RCC_APB1ENR_SPI3_POS			(15U)								// RCC APB1ENR register SPI3EN Bit Position
+#define RCC_APB1ENR_SPI3_MSK			(0x1 << RCC_APB1ENR_SPI3_POS)		// RCC APB1ENR register SPI3EN Bit Mask
+#define RCC_APB1ENR_SPI3				(RCC_APB1ENR_SPI23_MSK)				// RCC APB1ENR register SPI3EN Bit
+
+#define SPI_CR1_SPE_POS					(6U)								// SPI CR1 register SPE Bit Position
+#define SPI_CR1_SPE_MSK					(0x1 << SPI_CR1_SPE_POS)			// SPI CR1 register SPE Bit Mask
+#define SPI_CR1_SPE						(SPI_CR1_SPE_MSK)						// SPI CR1 register SPE Bit
+
+#define SPI_SR_TXE_POS					(1U)								// SPI SR register TXE Bit Position
+#define SPI_SR_TXE_MSK					(0x1 << SPI_SR_TXE_POS)				// SPI SR register TXE Bit Mask
+#define SPI_SR_TXE						(SPI_SR_TXE_MSK)						// SPI SR register TXE Bit
+
+#define SPI_SR_BSY_POS					(7U)								// SPI SR register BSY Bit Position
+#define SPI_SR_BSY_MSK					(0x1 << SPI_SR_BSY_POS)				// SPI SR register BSY Bit Mask
+#define SPI_SR_BSY						(SPI_SR_BSY_MSK)						// SPI SR register BSY Bit
+
 #include "rcc.h"
 #include "gpio.h"
 #include "exti.h"
+#include "spi.h"
 #endif /* INC_STM32L1_DEVICE_H_ */
