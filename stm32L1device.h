@@ -9,7 +9,8 @@
 #define INC_STM32L1_DEVICE_H_
 
 #include <stdint.h>
-
+#include <stddef.h>
+#include <string.h>
 /*
  * MircoProcessor Defines
  *
@@ -39,7 +40,9 @@ typedef enum
 	EXTI2_IRQNumber = 8,
 	EXTI3_IRQNumber = 9,
 	EXTI4_IRQNumber = 10,
-	EXTI15_10_IRQNumber = 40,
+	SPI2_IRQNumber = 36,
+	EXTI15_10_IRQNumber = 40
+
 
 }IRQ_Number_TypeDef_t;
 
@@ -206,6 +209,18 @@ typedef struct
 
 }SPI_TypeDef_t;
 
+typedef struct
+{
+	__IO uint32_t SR;					/*!< USART status register Address Offset					:0x00 >	*/
+	__IO uint32_t DR;					/*!< USART data register Address Offset						:0x04 >	*/
+	__IO uint32_t BRR;					/*!< USART BaudRate register Address Offset					:0x08 >	*/
+	__IO uint32_t CR1;					/*!< USART control register 1 Address Offset				:0x0C >	*/
+	__IO uint32_t CR2;					/*!< USART control register 2 Address Offset				:0x10 >	*/
+	__IO uint32_t CR3;					/*!< USART data register Address Offset						:0x14 >	*/
+	__IO uint32_t GTPR;					/*!< USART guard time and prescaler register Address Offset	:0x18 >	*/
+
+}USART_Typedef_t;
+
 
 /*
  * Bases address definitions of ports
@@ -226,8 +241,14 @@ typedef struct
 #define SYSCFG							((SYSCFG_TypeDef_t *)(SYSCFG_BASE_ADRR)	)
 
 #define EXTI							((EXTI_TypeDef_t *)(EXTI_BASE_ADRR)		)
+
 #define SPI1							((SPI_TypeDef_t *) (SPI1_BASE_ADRR)		)
 #define SPI2							((SPI_TypeDef_t *) (SPI2_BASE_ADRR)		)
+
+#define USART1							((USART_Typedef_t *)(USART1_ADRR)		)
+#define USART2							((USART_Typedef_t *)(USART2_ADRR)		)
+#define USART3							((USART_Typedef_t *)(USART3_ADRR)		)
+#define USART4							((USART_Typedef_t *)(USART4_ADRR)		)
 
 /*
  * Bit definitions
@@ -282,9 +303,17 @@ typedef struct
 #define RCC_APB1ENR_SPI3_MSK			(0x1 << RCC_APB1ENR_SPI3_POS)		// RCC APB1ENR register SPI3EN Bit Mask
 #define RCC_APB1ENR_SPI3				(RCC_APB1ENR_SPI23_MSK)				// RCC APB1ENR register SPI3EN Bit
 
+#define RCC_APB1ENR_USART2_POS			(17U)								// RCC APB1ENR register USART2 Bit Position
+#define	RCC_APB1_ENR_USART2_MSK			(0x1 << RCC_APB1ENR_USART2_POS)		// RCC APB1ENR register USART2 Bit Mask
+#define RCC_APB1_ENR_USART2				RCC_APB1_ENR_USART2_MSK				// RCC APB1ENR register USART2 Bit
+
 #define SPI_CR1_SPE_POS					(6U)								// SPI CR1 register SPE Bit Position
 #define SPI_CR1_SPE_MSK					(0x1 << SPI_CR1_SPE_POS)			// SPI CR1 register SPE Bit Mask
-#define SPI_CR1_SPE						(SPI_CR1_SPE_MSK)						// SPI CR1 register SPE Bit
+#define SPI_CR1_SPE						(SPI_CR1_SPE_MSK)					// SPI CR1 register SPE Bit
+
+#define SPI_CR1_DFF_POS					(11U)								// SPI CR1 register DFF Bit Position
+#define SPI_CR1_DFF_MSK					(0x1 << SPI_CR1_DFF_POS)			// SPI CR1 register DFF Bit Mask
+#define SPI_CR1_DFF						(SPI_CR1_DFF_MSK)					// SPI CR1 register DFF Bit
 
 #define SPI_SR_TXE_POS					(1U)								// SPI SR register TXE Bit Position
 #define SPI_SR_TXE_MSK					(0x1 << SPI_SR_TXE_POS)				// SPI SR register TXE Bit Mask
@@ -292,10 +321,31 @@ typedef struct
 
 #define SPI_SR_BSY_POS					(7U)								// SPI SR register BSY Bit Position
 #define SPI_SR_BSY_MSK					(0x1 << SPI_SR_BSY_POS)				// SPI SR register BSY Bit Mask
-#define SPI_SR_BSY						(SPI_SR_BSY_MSK)						// SPI SR register BSY Bit
+#define SPI_SR_BSY						(SPI_SR_BSY_MSK)					// SPI SR register BSY Bit
+
+#define SPI_CR2_TXEIE_POS				(7U)								// SPI CR2 register TXEIE Bit Position
+#define SPI_CR2_TXEIE_MSK				(0x1 << SPI_CR2_TXEIE_POS)			// SPI CR2 register TXEIE Bit Mask
+#define SPI_CR2_TXEIE					SPI_CR2_TXEIE_MSK					// SPI CR2 register TXEIE Bit
+
+#define USART_CR2_STOP_0_POS			(12U)
+#define USART_CR2_STOP_0_MSK			(0x1 << USART_CR2_STOP_0_POS)
+#define USART_CR2_STOP_0				(USART_CR2_STOP_0_MSK)
+
+#define USART_CR2_STOP_1_POS			(13U)
+#define USART_CR2_STOP_1_MSK			(0x1 << USART_CR2_STOP_1_POS)
+#define USART_CR2_STOP_1				(USART_CR2_STOP_1_MSK)
+
+#define USART_SR_TXE_POS				(7U)
+#define USART_SR_TXE_MSK				(0x1 << USART_SR_TXE_POS)
+#define USART_SR_TXE					(USART_SR_TXE_MSK)
+
+#define USART_SR_TC_POS					(6U)
+#define USART_SR_TC_MSK					(0x1 << USART_SR_TC_POS)
+#define USART_SR_TC						(USART_SR_TC_MSK)
 
 #include "rcc.h"
 #include "gpio.h"
 #include "exti.h"
 #include "spi.h"
+#include "usart.h"
 #endif /* INC_STM32L1_DEVICE_H_ */

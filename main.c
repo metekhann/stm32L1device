@@ -16,9 +16,9 @@
  ******************************************************************************
  */
 
-#include <stdint.h>
+
 #include "stm32L1device.h"
-#include <string.h>
+
 
 #if !defined(__SOFT_FP__) && defined(__ARM_FP)
   #warning "FPU is not initialized, but the project is compiling for an FPU. Please initialize the FPU before use."
@@ -31,6 +31,7 @@ static void SPI_Config();
 static void SPI_GPIO_Config();
 
 SPI_HandleTypeDef_t SPI_Handle;
+USART_HandleTypedef_t usart_handle;
 uint8_t flag = 0;
 int main(void)
 {
@@ -49,7 +50,7 @@ int main(void)
 		if(flag == 1)
 		{
 			GPIO_TogglePin(GPIOA, GPIO_PIN_5);
-			SPI_TransmitData(&SPI_Handle, (uint8_t *)msg, sizeof(msg));
+			SPI_TransmitData_IT(&SPI_Handle, (uint8_t *)msg, sizeof(msg));
 			flag = 0;
 		}
 //		SPI_TransmitData(&SPI_Handle, (uint8_t *)msg, sizeof(msg));
@@ -103,11 +104,12 @@ static void SPI_Config()
 	SPI_Handle.Init.CPHA = SPI_CPHA_FIRST;
 	SPI_Handle.Init.CPOL = SPI_CPOL_LOW;
 	SPI_Handle.Init.FrameFormat = SPI_FRAME_FORMAT_MSB;
-	SPI_Handle.Init.DFF_Format = SPI_DFF_8BIT;
+	SPI_Handle.Init.DFF_Format = SPI_DFF_16BIT;
 	SPI_Handle.Init.Mode = SPI_MODE_MASTER;
 	SPI_Handle.Init.SSM_Cmd = SPI_SSM_ENABLE;
 
 	SPI_Init(&SPI_Handle);
+	NVIC_EnableInterrupt(SPI2_IRQNumber);
 	SPI_PeripheralCmd(&SPI_Handle, ENABLE);
 }
 
@@ -137,4 +139,8 @@ void EXTI15_10_IRQHandler()
 		flag = 1;
 
 	}
+}
+void SPI2_IRQHandler()
+{
+	SPI_InterruptHandler(&SPI_Handle);
 }

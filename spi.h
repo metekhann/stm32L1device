@@ -10,6 +10,12 @@
 
 #include "stm32L1device.h"
 
+typedef enum
+{
+	SPI_BUS_FREE = 0x0U,
+	SPI_BUS_BUSY_TX = 0x1U,
+	SPI_BUS_BUSY_RX = 0x2U
+}SPI_BusStatus_t;
 /*
  * @def_group SPI_BaudRate
  *
@@ -88,15 +94,23 @@ typedef struct
 	uint32_t FrameFormat;	/*!  Frame Format Values for SPI @def_group Frame_Format >*/
 
 }SPI_Init_TypeDef_t;
-typedef struct
+
+typedef struct __SPI_HandleTypedef_t
 {
 	SPI_TypeDef_t* Instance;
 	SPI_Init_TypeDef_t Init;
+	uint8_t *pTxDataAddr;
+	uint16_t TxDataSize;
+	uint8_t BusStateTx;
+	void(*TxISRFunction)(struct __SPI_HandleTypedef_t *SPI_Handle_Struct);
+
 
 }SPI_HandleTypeDef_t;
 
 void SPI_Init(SPI_HandleTypeDef_t *Handle);
-void SPI_PeripheralCmd(SPI_HandleTypeDef_t *SPI_Handle, FunctionalState_t stateOfSPI);
-void SPI_TransmitData(SPI_HandleTypeDef_t *SPI_Handle, uint8_t *pData, uint16_t sizeofData);
+void SPI_PeripheralCmd(SPI_HandleTypeDef_t *SPI_Handle_Struct, FunctionalState_t stateOfSPI);
+void SPI_TransmitData(SPI_HandleTypeDef_t *SPI_Handle_Struct, uint8_t *pData, uint16_t sizeofData);
+void SPI_TransmitData_IT(SPI_HandleTypeDef_t *SPI_Handle_Struct, uint8_t *pData, uint16_t sizeofData);
+void SPI_InterruptHandler(SPI_HandleTypeDef_t *SPI_Handle_Struct);
 
 #endif /* INC_SPI_H_ */
