@@ -38,7 +38,7 @@
  *
  */
 #define GPIO_MODE_INPUT					(0x0U)							/*! <GPIO PIN MODE "INPUT" 				>*/
-#define GPIO_MODE_OUT					(0x1U)							/*! <GPIO PIN MODE "OUTPUT" 			>*/
+#define GPIO_MODE_OUTPUT				(0x1U)							/*! <GPIO PIN MODE "OUTPUT" 			>*/
 #define GPIO_MODE_ALTERNATE 			(0x2U)							/*! <GPIO PIN MODE "ALTERNATE FUNCTION" >*/
 #define GPIO_MODE_ANALOG				(0x3U)							/*! <GPIO PIN MODE "ANALOG" 			>*/
 
@@ -66,6 +66,26 @@
 #define GPIO_SPEED_HIGH					(0x2U)							/*! < GPIO Speed MODE "HIGH"			>*/
 #define GPIO_SPEED_VERY					(0x3U)							/*! < GPIO Speed MODE "VERY HIGH"		>*/
 
+/*
+ * @def_group GPIO_Alternate_Modes
+ *
+ */
+#define GPIO_ALTERNATE_0					(0x0U);
+#define GPIO_ALTERNATE_1					(0x1U);
+#define GPIO_ALTERNATE_2					(0x2U);
+#define GPIO_ALTERNATE_3					(0x3U);
+#define GPIO_ALTERNATE_4					(0x4U);
+#define GPIO_ALTERNATE_5					(0x5U);
+#define GPIO_ALTERNATE_6					(0x6U);
+#define GPIO_ALTERNATE_7					(0x7U);
+#define GPIO_ALTERNATE_8					(0x8U);
+#define GPIO_ALTERNATE_9					(0x9U);
+#define GPIO_ALTERNATE_10					(0xAU);
+#define GPIO_ALTERNATE_11					(0xBU);
+#define GPIO_ALTERNATE_12					(0xCU);
+#define GPIO_ALTERNATE_13					(0xDU);
+#define GPIO_ALTERNATE_14					(0xEU);
+#define GPIO_ALTERNATE_15					(0xFU);
 
 
 
