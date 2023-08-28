@@ -245,10 +245,10 @@ typedef struct
 #define SPI1							((SPI_TypeDef_t *) (SPI1_BASE_ADRR)		)
 #define SPI2							((SPI_TypeDef_t *) (SPI2_BASE_ADRR)		)
 
-#define USART1							((USART_Typedef_t *)(USART1_ADRR)		)
-#define USART2							((USART_Typedef_t *)(USART2_ADRR)		)
-#define USART3							((USART_Typedef_t *)(USART3_ADRR)		)
-#define USART4							((USART_Typedef_t *)(USART4_ADRR)		)
+#define USART1							((USART_Typedef_t *)(USART1_BASE_ADRR)		)
+#define USART2							((USART_Typedef_t *)(USART2_BASE_ADRR)		)
+#define USART3							((USART_Typedef_t *)(USART3_BASE_ADRR)		)
+#define USART4							((USART_Typedef_t *)(USART4_BASE_ADRR)		)
 
 /*
  * Bit definitions
@@ -269,7 +269,7 @@ typedef struct
 
 #define RCC_AHBENR_GPIODEN_Pos			(3U)								//RCC AHBENR register GPIODEN Bit Position
 #define RCC_AHBENR_GPIODEN_Msk			(0x1 << RCC_AHBENR_GPIODEN_Pos)		//RCC AHBENR register GPIODEN Bit Mask
-#define RCC_AHBENR_GPIODEN				(RCC_AHBENR_GPIOCDEN_Msk)			//RCC AHBENR register GPIODEN Bit Macro
+#define RCC_AHBENR_GPIODEN				(RCC_AHBENR_GPIODEN_Msk)			//RCC AHBENR register GPIODEN Bit Macro
 
 #define RCC_AHBENR_GPIOEEN_Pos			(4U)								//RCC AHBENR register GPIOEEN Bit Position
 #define RCC_AHBENR_GPIOEEN_Msk			(0x1 << RCC_AHBENR_GPIOEEN_Pos)		//RCC AHBENR register GPIOEEN Bit Mask
@@ -303,9 +303,9 @@ typedef struct
 #define RCC_APB1ENR_SPI3_MSK			(0x1 << RCC_APB1ENR_SPI3_POS)		// RCC APB1ENR register SPI3EN Bit Mask
 #define RCC_APB1ENR_SPI3				(RCC_APB1ENR_SPI23_MSK)				// RCC APB1ENR register SPI3EN Bit
 
-#define RCC_APB1ENR_USART2_POS			(17U)								// RCC APB1ENR register USART2 Bit Position
-#define	RCC_APB1_ENR_USART2_MSK			(0x1 << RCC_APB1ENR_USART2_POS)		// RCC APB1ENR register USART2 Bit Mask
-#define RCC_APB1_ENR_USART2				RCC_APB1_ENR_USART2_MSK				// RCC APB1ENR register USART2 Bit
+#define RCC_APB2ENR_USART2_POS			(17U)								// RCC APB1ENR register USART2 Bit Position
+#define	RCC_APB2_ENR_USART2_MSK			(0x1 << RCC_APB2ENR_USART2_POS)		// RCC APB1ENR register USART2 Bit Mask
+#define RCC_APB2_ENR_USART2				(RCC_APB2_ENR_USART2_MSK)				// RCC APB1ENR register USART2 Bit
 
 #define SPI_CR1_SPE_POS					(6U)								// SPI CR1 register SPE Bit Position
 #define SPI_CR1_SPE_MSK					(0x1 << SPI_CR1_SPE_POS)			// SPI CR1 register SPE Bit Mask

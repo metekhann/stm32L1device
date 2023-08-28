@@ -58,7 +58,8 @@
 #define USART_HW_RTS				((uint32_t)(0x00000100))
 #define USART_HW_CTS_RTS			((uint32_t)(0x00000300))
 
-
+#define __UART_BRR_OVERSAMPLING_8(__PLCOK__, __BAUDRATE__)			((25 * (__PLCOK__) )	/ (4 * (__BAUDRATE__) ))
+#define __UART_BRR_OVERSAMPLING_16(__PLCOK__, __BAUDRATE__)			((25 * (__PLCOK__) )	/ (2 * (__BAUDRATE__) ))
 
 typedef struct
 {
@@ -81,6 +82,7 @@ typedef struct
 }USART_HandleTypedef_t;
 
 void USART_Init(USART_HandleTypedef_t *USART_Handle);
+void USART_Enable(USART_HandleTypedef_t *USART_Handle , FunctionalState_t State);
 void USART_Transmit(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint16_t dataSize);
 
 

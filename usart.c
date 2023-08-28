@@ -10,6 +10,12 @@
 void USART_Init(USART_HandleTypedef_t *USART_Handle)
 {
 	uint32_t tempReg= 0;
+	uint32_t periphClk = 0;
+	uint32_t mantissaPart = 0;
+	uint32_t fractionPart = 0;
+	uint32_t USART_DIV_Value = 0;
+	uint32_t temp = 0;
+
 	/*****	OverSampling********	WordLenght	******	Mode	**************	Parity	*************/
 	tempReg = USART_Handle->Instance->CR1;
 	tempReg |= (USART_Handle->Init.OverSampling) | (USART_Handle->Init.WordLenght) | (USART_Handle->Init.Mode) | (USART_Handle->Init.Parity);
@@ -24,8 +30,51 @@ void USART_Init(USART_HandleTypedef_t *USART_Handle)
 	tempReg = USART_Handle->Instance->CR3;
 	tempReg |= (USART_Handle->Init.HardwareFlowControl);
 	USART_Handle->Instance->CR3 = tempReg;
+
+	/** Baud Rate */
+	if(USART_Handle->Instance == USART1)
+	{
+		periphClk = RCC_GetPClk2Clock();
+	}
+	else
+	{
+		periphClk = RCC_GetPClk1Clock();
+	}
+
+	if(USART_Handle->Init.OverSampling == USART_OVERSAMPLING_8)
+	{
+		//USART_Handle->Instance->BRR = __UART_BRR_OVERSAMPLING_8(periphClk, USART_Handle->Init.BaudRate);
+		USART_DIV_Value = __UART_BRR_OVERSAMPLING_8(periphClk, USART_Handle->Init.BaudRate);
+		mantissaPart = (USART_DIV_Value / 100U);
+		fractionPart = (USART_DIV_Value) - (mantissaPart * 100U);
+		fractionPart = ((fractionPart * 8U) + 50U) & (0x7U);
+
+	}
+	else
+	{
+		//USART_Handle->Instance->BRR = __UART_BRR_OVERSAMPLING_16(periphClk, USART_Handle->Init.BaudRate);
+		USART_DIV_Value = __UART_BRR_OVERSAMPLING_16(periphClk, USART_Handle->Init.BaudRate);
+		mantissaPart = (USART_DIV_Value / 100U);
+		fractionPart = (USART_DIV_Value) - (mantissaPart * 100U);
+		fractionPart = ((fractionPart * 16U) + 50U) & (0xFU);
+	}
+
+	temp |= (mantissaPart << 4U);
+	temp |= (fractionPart << 0U);
+	USART_Handle->Instance->BRR = temp;
 }
 
+void USART_Enable(USART_HandleTypedef_t *USART_Handle , FunctionalState_t State)
+{
+	if(State == ENABLE)
+	{
+		USART_Handle->Instance->CR1 |= (0x1U << 13U);
+	}
+	else
+	{
+		USART_Handle->Instance->CR1 &= ~(0x1U << 13U);
+	}
+}
 
 void USART_Transmit(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint16_t dataSize)
 {

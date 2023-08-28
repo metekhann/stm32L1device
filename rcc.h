@@ -83,13 +83,13 @@
 										}while(0)
 
 #define RCC_SPI3_CLK_ENABLE()			do{	uint32_t temp = 0;									 \
-											SET_BIT(RCC->APB1ENR, RCC_APB2ENR_SPI2);			 \
-											temp = READ_BIT(RCC->APB1ENR, RCC_APB2ENR_SPI2); 	 \
+											SET_BIT(RCC->APB1ENR, RCC_APB1ENR_SPI2);			 \
+											temp = READ_BIT(RCC->APB1ENR, RCC_APB1ENR_SPI2); 	 \
 											UNUSED(temp);										 \
 										}while(0)
 #define RCC_USART2_CLK_ENABLE()			do{	uint32_t temp = 0;									 \
-											SET_BIT(RCC->APB1ENR, RCC_APB2ENR_USART2);			 \
-											temp = READ_BIT(RCC->APB1ENR, RCC_APB2ENR_USART2); 	 \
+											SET_BIT(RCC->APB2ENR, RCC_APB2_ENR_USART2);			 \
+											temp = READ_BIT(RCC->APB2ENR, RCC_APB2_ENR_USART2); 	 \
 											UNUSED(temp);										 \
 										}while(0)
 
@@ -108,4 +108,11 @@
 #define RCC_SPI2_CLK_DISABLE()			CLEAR_BIT(RCC->APB1ENR, RCC_APB1ENR_SPI2)
 #define RCC_SPI3_CLK_DISABLE()			CLEAR_BIT(RCC->APB1ENR, RCC_APB2ENR_SPI3)
 #define RCC_USART2_CLK_DISABLE()		CLEAR_BIT(RCC->APB1ENR, RCC_APB2ENR_USART2)
+
+
+uint32_t RCC_GetSystemClock();
+uint32_t RCC_GetHClock();
+uint32_t RCC_GetPClk1Clock();
+uint32_t RCC_GetPClk2Clock();
+
 #endif /* INC_RCC_H_ */
