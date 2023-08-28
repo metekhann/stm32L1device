@@ -91,7 +91,7 @@ void USART_Transmit(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint16_
 
 	while(dataSize > 0)
 	{
-		while(USART_Handle->Instance->SR && USART_SR_TXE);
+		while(!(USART_Handle->Instance->SR && USART_SR_TXE));
 
 		if(data16bits == NULL)
 		{
