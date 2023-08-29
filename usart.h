@@ -58,8 +58,43 @@
 #define USART_HW_RTS				((uint32_t)(0x00000100))
 #define USART_HW_CTS_RTS			((uint32_t)(0x00000300))
 
-#define __UART_BRR_OVERSAMPLING_8(__PLCOK__, __BAUDRATE__)			((25 * (__PLCOK__) )	/ (4 * (__BAUDRATE__) ))
-#define __UART_BRR_OVERSAMPLING_16(__PLCOK__, __BAUDRATE__)			((25 * (__PLCOK__) )	/ (2 * (__BAUDRATE__) ))
+#define __UART_BRR_OVERSAMPLING_8(__PLCOK__, __BAUDRATE__)			((25U * ((uint32_t)__PLCOK__) )	/ (2U * ((uint32_t)__BAUDRATE__) ))
+#define __UART_BRR_OVERSAMPLING_16(__PLCOK__, __BAUDRATE__)			((25U * ((uint32_t)__PLCOK__) )	/ (4U * ((uint32_t)__BAUDRATE__) ))
+
+
+
+
+/**********HAL LIBRARY CODES *////////
+
+#define UART_DIV_SAMPLING16(_PCLK_, _BAUD_)            (((_PCLK_)*25U)/(4U*(_BAUD_)))
+#define UART_DIVMANT_SAMPLING16(_PCLK_, _BAUD_)        (UART_DIV_SAMPLING16((_PCLK_), (_BAUD_))/100U)
+#define UART_DIVFRAQ_SAMPLING16(_PCLK_, _BAUD_)        ((((UART_DIV_SAMPLING16((_PCLK_), (_BAUD_)) - (UART_DIVMANT_SAMPLING16((_PCLK_), (_BAUD_)) * 100U)) * 16U)\
+                                                         + 50U) / 100U)
+/* UART BRR = mantissa + overflow + fraction
+            = (UART DIVMANT << 4) + (UART DIVFRAQ & 0xF0) + (UART DIVFRAQ & 0x0FU) */
+#define UART_BRR_SAMPLING16(_PCLK_, _BAUD_)            (((UART_DIVMANT_SAMPLING16((_PCLK_), (_BAUD_)) << 4U) + \
+                                                         (UART_DIVFRAQ_SAMPLING16((_PCLK_), (_BAUD_)) & 0xF0U)) + \
+                                                        (UART_DIVFRAQ_SAMPLING16((_PCLK_), (_BAUD_)) & 0x0FU))
+
+#define UART_DIV_SAMPLING8(_PCLK_, _BAUD_)             (((_PCLK_)*25U)/(2U*(_BAUD_)))
+#define UART_DIVMANT_SAMPLING8(_PCLK_, _BAUD_)         (UART_DIV_SAMPLING8((_PCLK_), (_BAUD_))/100U)
+#define UART_DIVFRAQ_SAMPLING8(_PCLK_, _BAUD_)         ((((UART_DIV_SAMPLING8((_PCLK_), (_BAUD_)) - (UART_DIVMANT_SAMPLING8((_PCLK_), (_BAUD_)) * 100U)) * 8U)\
+                                                         + 50U) / 100U)
+
+#define UART_BRR_SAMPLING8(_PCLK_, _BAUD_)             (((UART_DIVMANT_SAMPLING8((_PCLK_), (_BAUD_)) << 4U) + \
+                                                         ((UART_DIVFRAQ_SAMPLING8((_PCLK_), (_BAUD_)) & 0xF8U) << 1U)) + \
+                                                        (UART_DIVFRAQ_SAMPLING8((_PCLK_), (_BAUD_)) & 0x07U))
+
+
+
+#define UART_BRR_SAMPLING16(_PCLK_, _BAUD_)            (((UART_DIVMANT_SAMPLING16((_PCLK_), (_BAUD_)) << 4U) + \
+                                                         (UART_DIVFRAQ_SAMPLING16((_PCLK_), (_BAUD_)) & 0xF0U)) + \
+                                                        (UART_DIVFRAQ_SAMPLING16((_PCLK_), (_BAUD_)) & 0x0FU))
+
+/**********HAL LIBRARY CODES *////////
+
+
+
 
 typedef struct
 {

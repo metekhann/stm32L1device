@@ -41,27 +41,31 @@ void USART_Init(USART_HandleTypedef_t *USART_Handle)
 		periphClk = RCC_GetPClk1Clock();
 	}
 
+
 	if(USART_Handle->Init.OverSampling == USART_OVERSAMPLING_8)
 	{
+		USART_Handle->Instance->BRR = UART_BRR_SAMPLING8(periphClk, USART_Handle->Init.BaudRate);
 		//USART_Handle->Instance->BRR = __UART_BRR_OVERSAMPLING_8(periphClk, USART_Handle->Init.BaudRate);
-		USART_DIV_Value = __UART_BRR_OVERSAMPLING_8(periphClk, USART_Handle->Init.BaudRate);
+		/*USART_DIV_Value = __UART_BRR_OVERSAMPLING_8(periphClk, USART_Handle->Init.BaudRate);
 		mantissaPart = (USART_DIV_Value / 100U);
 		fractionPart = (USART_DIV_Value) - (mantissaPart * 100U);
-		fractionPart = ((fractionPart * 8U) + 50U) & (0x7U);
+		fractionPart = (((fractionPart * 8U) + 50U) / 100U) & (0x07U);*/
+
 
 	}
 	else
 	{
+		USART_Handle->Instance->BRR = UART_BRR_SAMPLING16(periphClk, USART_Handle->Init.BaudRate);
 		//USART_Handle->Instance->BRR = __UART_BRR_OVERSAMPLING_16(periphClk, USART_Handle->Init.BaudRate);
-		USART_DIV_Value = __UART_BRR_OVERSAMPLING_16(periphClk, USART_Handle->Init.BaudRate);
+		/*USART_DIV_Value = __UART_BRR_OVERSAMPLING_16(periphClk, USART_Handle->Init.BaudRate);
 		mantissaPart = (USART_DIV_Value / 100U);
 		fractionPart = (USART_DIV_Value) - (mantissaPart * 100U);
-		fractionPart = ((fractionPart * 16U) + 50U) & (0xFU);
+		fractionPart = (((fractionPart * 16U) + 50U) / 100U) & (0x0FU);*/
 	}
 
-	temp |= (mantissaPart << 4U);
+	/*temp |= (mantissaPart << 4U);
 	temp |= (fractionPart << 0U);
-	USART_Handle->Instance->BRR = temp;
+	USART_Handle->Instance->BRR = temp;*/
 }
 
 void USART_Enable(USART_HandleTypedef_t *USART_Handle , FunctionalState_t State)
@@ -91,11 +95,13 @@ void USART_Transmit(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint16_
 
 	while(dataSize > 0)
 	{
-		while(!(USART_Handle->Instance->SR && USART_SR_TXE));
+		while(!(USART_Handle->Instance->SR & (uint32_t)USART_SR_TXE));
 
 		if(data16bits == NULL)
 		{
-			USART_Handle->Instance->DR = (uint16_t)*pData;
+			USART_Handle->Instance->DR = (uint8_t)(*pData & 0xFFU);
+			pData++;
+			dataSize -= 1;
 		}
 		else
 		{
@@ -106,5 +112,5 @@ void USART_Transmit(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint16_
 
 	}
 
-	while(! (USART_Handle->Instance->SR && USART_SR_TC) );
+	while(! (USART_Handle->Instance->SR & USART_SR_TC) );
 }

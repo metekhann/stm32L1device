@@ -303,9 +303,13 @@ typedef struct
 #define RCC_APB1ENR_SPI3_MSK			(0x1 << RCC_APB1ENR_SPI3_POS)		// RCC APB1ENR register SPI3EN Bit Mask
 #define RCC_APB1ENR_SPI3				(RCC_APB1ENR_SPI23_MSK)				// RCC APB1ENR register SPI3EN Bit
 
-#define RCC_APB2ENR_USART2_POS			(17U)								// RCC APB1ENR register USART2 Bit Position
-#define	RCC_APB2_ENR_USART2_MSK			(0x1 << RCC_APB2ENR_USART2_POS)		// RCC APB1ENR register USART2 Bit Mask
-#define RCC_APB2_ENR_USART2				(RCC_APB2_ENR_USART2_MSK)				// RCC APB1ENR register USART2 Bit
+#define RCC_APB2ENR_USART1_POS			(14U)
+#define RCC_APB2ENR_USART1_MSK			(0x1 << RCC_APB2ENR_USART1_POS)
+#define RCC_APB2ENR_USART1					(RCC_APB2ENR_USART1_MSK)
+
+#define RCC_APB1ENR_USART2_POS			(17U)								// RCC APB1ENR register USART2 Bit Position
+#define	RCC_APB1ENR_USART2_MSK			(0x1 << RCC_APB1ENR_USART2_POS)		// RCC APB1ENR register USART2 Bit Mask
+#define RCC_APB1ENR_USART2				(RCC_APB1ENR_USART2_MSK)				// RCC APB1ENR register USART2 Bit
 
 #define SPI_CR1_SPE_POS					(6U)								// SPI CR1 register SPE Bit Position
 #define SPI_CR1_SPE_MSK					(0x1 << SPI_CR1_SPE_POS)			// SPI CR1 register SPE Bit Mask
@@ -336,7 +340,7 @@ typedef struct
 #define USART_CR2_STOP_1				(USART_CR2_STOP_1_MSK)
 
 #define USART_SR_TXE_POS				(7U)
-#define USART_SR_TXE_MSK				(0x1 << USART_SR_TXE_POS)
+#define USART_SR_TXE_MSK				(0x1U << USART_SR_TXE_POS)
 #define USART_SR_TXE					(USART_SR_TXE_MSK)
 
 #define USART_SR_TC_POS					(6U)
