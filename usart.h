@@ -61,7 +61,12 @@
 #define __UART_BRR_OVERSAMPLING_8(__PLCOK__, __BAUDRATE__)			((25U * ((uint32_t)__PLCOK__) )	/ (2U * ((uint32_t)__BAUDRATE__) ))
 #define __UART_BRR_OVERSAMPLING_16(__PLCOK__, __BAUDRATE__)			((25U * ((uint32_t)__PLCOK__) )	/ (4U * ((uint32_t)__BAUDRATE__) ))
 
-
+typedef enum
+{
+	USART_BUS_FREE 	= 0x0,
+	USART_BUS_Tx   	= 0x1,
+	USART_BUS_Rx	= 0x2
+}USART_BusState;
 
 
 /**********HAL LIBRARY CODES *////////
@@ -108,10 +113,18 @@ typedef struct
 
 }USART_InitTypedef_t;
 
-typedef struct
+typedef struct __USART_HandleTypedef_t
 {
 	USART_Typedef_t* Instance;
 	USART_InitTypedef_t Init;
+	uint8_t *pTxBuffer;
+	uint16_t TxBufferSizze;
+	uint8_t TxStatus;
+	void(*txISR_Function)(struct __USART_HandleTypedef_t *UART_Handle);
+	uint8_t *pRxBuffer;
+	uint16_t RxBufferSize;
+	uint8_t RxStatus;
+	void(*rxISR_Function)(struct __USART_HandleTypedef_t *UART_Handle);
 
 
 }USART_HandleTypedef_t;
@@ -119,6 +132,10 @@ typedef struct
 void USART_Init(USART_HandleTypedef_t *USART_Handle);
 void USART_Enable(USART_HandleTypedef_t *USART_Handle , FunctionalState_t State);
 void USART_Transmit(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint16_t dataSize);
+void USART_Receive(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint16_t dataSize);
+void USART_Transmit_IT(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint16_t dataSize);
+void USART_Receive_IT(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint16_t dataSize);
+void USART_InterruptHandler(USART_HandleTypedef_t *USART_Handle);
 
 
 #endif /* INC_USART_H_ */

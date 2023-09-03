@@ -11,6 +11,8 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
+#include <stdarg.h>
+#include <stdlib.h>
 /*
  * MircoProcessor Defines
  *
@@ -41,6 +43,7 @@ typedef enum
 	EXTI3_IRQNumber = 9,
 	EXTI4_IRQNumber = 10,
 	SPI2_IRQNumber = 36,
+	USART2_IRQNumber =37,
 	EXTI15_10_IRQNumber = 40
 
 
@@ -221,6 +224,19 @@ typedef struct
 
 }USART_Typedef_t;
 
+typedef struct
+{
+	__IO uint32_t CR1;
+	__IO uint32_t CR2;
+	__IO uint32_t OAR1;
+	__IO uint32_t OAR2;
+	__IO uint32_t DR;
+	__IO uint32_t SR1;
+	__IO uint32_t SR2;
+	__IO uint32_t CCR;
+	__IO uint32_t TRISE;
+
+}I2C_Typedef_t;
 
 /*
  * Bases address definitions of ports
@@ -249,6 +265,10 @@ typedef struct
 #define USART2							((USART_Typedef_t *)(USART2_BASE_ADRR)		)
 #define USART3							((USART_Typedef_t *)(USART3_BASE_ADRR)		)
 #define USART4							((USART_Typedef_t *)(USART4_BASE_ADRR)		)
+
+
+#define I2C1							((I2C_Typedef_t   *)(I2C1_BASE_ADRR)		)
+#define I2C2							((I2C_Typedef_t   *)(I2C2_BASE_ADRR)		)
 
 /*
  * Bit definitions
@@ -305,11 +325,19 @@ typedef struct
 
 #define RCC_APB2ENR_USART1_POS			(14U)
 #define RCC_APB2ENR_USART1_MSK			(0x1 << RCC_APB2ENR_USART1_POS)
-#define RCC_APB2ENR_USART1					(RCC_APB2ENR_USART1_MSK)
+#define RCC_APB2ENR_USART1				(RCC_APB2ENR_USART1_MSK)
 
 #define RCC_APB1ENR_USART2_POS			(17U)								// RCC APB1ENR register USART2 Bit Position
 #define	RCC_APB1ENR_USART2_MSK			(0x1 << RCC_APB1ENR_USART2_POS)		// RCC APB1ENR register USART2 Bit Mask
 #define RCC_APB1ENR_USART2				(RCC_APB1ENR_USART2_MSK)				// RCC APB1ENR register USART2 Bit
+
+#define RCC_APB1ENR_I2C1_POS			(21U)
+#define	RCC_APB1ENR_I2C1_MSK			(0x1 << RCC_APB1ENR_I2C1_POS)
+#define RCC_APB1ENR_I2C1				(RCC_APB1ENR_I2C1_MSK)
+
+#define RCC_APB1ENR_I2C2_POS			(22U)
+#define	RCC_APB1ENR_I2C2_MSK			(0x1 << RCC_APB1ENR_I2C2_POS)
+#define RCC_APB1ENR_I2C2				(RCC_APB1ENR_I2C2_MSK)
 
 #define SPI_CR1_SPE_POS					(6U)								// SPI CR1 register SPE Bit Position
 #define SPI_CR1_SPE_MSK					(0x1 << SPI_CR1_SPE_POS)			// SPI CR1 register SPE Bit Mask
@@ -331,6 +359,14 @@ typedef struct
 #define SPI_CR2_TXEIE_MSK				(0x1 << SPI_CR2_TXEIE_POS)			// SPI CR2 register TXEIE Bit Mask
 #define SPI_CR2_TXEIE					SPI_CR2_TXEIE_MSK					// SPI CR2 register TXEIE Bit
 
+#define USART_CR1_TXEIE_POS				(7U)
+#define USART_CR1_TXEIE_MSK				(0x1 << USART_CR1_TXEIE_POS)
+#define USART_CR1_TXEIE					(USART_CR1_TXEIE_MSK)
+
+#define USART_CR1_RXNEIE_POS			(5U)
+#define USART_CR1_RXNEIE_MSK			(0x1 << USART_CR1_RXNEIE_POS)
+#define USART_CR1_RXNEIE				(USART_CR1_RXNEIE_MSK)
+
 #define USART_CR2_STOP_0_POS			(12U)
 #define USART_CR2_STOP_0_MSK			(0x1 << USART_CR2_STOP_0_POS)
 #define USART_CR2_STOP_0				(USART_CR2_STOP_0_MSK)
@@ -347,9 +383,21 @@ typedef struct
 #define USART_SR_TC_MSK					(0x1 << USART_SR_TC_POS)
 #define USART_SR_TC						(USART_SR_TC_MSK)
 
+#define USART_SR_RXNE_POS				(5U)
+#define USART_SR_RXNE_MSK				(0x1 << USART_SR_RXNE_POS)
+#define USART_SR_RXNE					(USART_SR_RXNE_MSK)
+
+#define I2C_CR1_PE_POS					(0U)
+#define I2C_CR1_PE_MSK					(0x1 << I2C_CR1_PE_POS)
+#define I2C_CR1_PE						(I2C_CR1_PE_MSK)
+
+
+
+
 #include "rcc.h"
 #include "gpio.h"
 #include "exti.h"
 #include "spi.h"
 #include "usart.h"
+#include "i2c.h"
 #endif /* INC_STM32L1_DEVICE_H_ */
