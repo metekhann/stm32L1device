@@ -8,6 +8,31 @@
 #include "i2c.h"
 
 
+static void I2C_Generete_StartCondition(I2C_Typedef_t *I2Cx)
+{
+	I2Cx->CR1 |= I2C_CR1_START;
+}
+
+static void I2C_Generete_STOPCondition(I2C_Typedef_t *I2Cx)
+{
+	I2Cx->CR1 |= I2C_CR1_STOP;
+}
+
+static void I2C_Execute_Address_Phase(I2C_Typedef_t *I2Cx, uint8_t SlaveAddr)
+{
+	SlaveAddr = SlaveAddr << 1;
+	SlaveAddr &= ~(1);
+	I2Cx->DR = SlaveAddr;
+}
+
+static void I2C_Clear_ADDR_Flag(I2C_Typedef_t *I2Cx)
+{
+	uint32_t dummyRead = I2Cx->SR1;
+	dummyRead = I2Cx->SR2;
+	(void)dummyRead;
+
+}
+
 void I2C_Enable(I2C_Typedef_t *I2Cx, FunctionalState_t stateofI2C)
 {
 	if( stateofI2C == ENABLE)
@@ -95,4 +120,38 @@ void I2C_Init(I2C_HandleTypedef_t *I2C_Handle)
 		I2C_Handle->Instance->CCR = temp;
 	}
 
+}
+
+void I2C_Master_Transmit(I2C_HandleTypedef_t *I2C_Handle, uint8_t *pData, uint32_t dataSize, uint8_t SlaveAddr)
+{
+	// 1. Generate the Start Condition
+	I2C_Generete_StartCondition(I2C_Handle->Instance);
+
+	// 2. Confirm that start generation is completed by checking the SB flag
+	while(!(I2C_Handle->Instance->SR1 & I2C_SR1_SB));
+
+	// 3. Send the address of the slave with r/w bit
+	I2C_Execute_Address_Phase(I2C_Handle->Instance, SlaveAddr);
+
+	// 4. Confirm that address phase is completed by checking the ADDR flag
+	while(!(I2C_Handle->Instance->SR1 & I2C_SR1_ADRR));
+
+	// 5. clear the ADDR flag according to its software sequence
+	// Note: Until ADDR is cleared SCL will be stretched (pulled to LOW)
+	I2C_Clear_ADDR_Flag(I2C_Handle->Instance);
+
+	// 6. send the data until dataSize becomes 0
+	while(dataSize > 0)
+	{
+		while(!(I2C_Handle->Instance->SR1 & I2C_SR1_TXE));
+		I2C_Handle->Instance->DR = (uint8_t)(*pData & 0xFFU);
+		pData++;
+		dataSize--;
+	}
+	// 7. when dataSize becomes zero wait for TXE=1 and BTF=1 before generating the STOP condition
+	while(!(I2C_Handle->Instance->SR1 & I2C_SR1_TXE));
+	while(!(I2C_Handle->Instance->SR1 & I2C_SR1_BTF));
+
+	// 8. Generate STOP condition and master need not to wait for the completion of stop condition
+	I2C_Generete_STOPCondition(I2C_Handle->Instance);
 }

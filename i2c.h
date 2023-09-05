@@ -70,5 +70,6 @@ typedef struct
 
 void I2C_Init(I2C_HandleTypedef_t *I2C_Handle);
 void I2C_Enable(I2C_Typedef_t *I2Cx, FunctionalState_t stateofI2C);
+void I2C_Master_Transmit(I2C_HandleTypedef_t *I2C_Handle, uint8_t *pData, uint32_t dataSize, uint8_t SlaveAddr);
 
 #endif /* INC_I2C_C_ */

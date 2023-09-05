@@ -391,6 +391,34 @@ typedef struct
 #define I2C_CR1_PE_MSK					(0x1 << I2C_CR1_PE_POS)
 #define I2C_CR1_PE						(I2C_CR1_PE_MSK)
 
+#define I2C_CR1_START_POS				(8U)
+#define I2C_CR1_START_MSK				(0x1 << I2C_CR1_START_POS)
+#define I2C_CR1_START					(I2C_CR1_START_MSK)
+
+#define I2C_CR1_STOP_POS				(9U)
+#define I2C_CR1_STOP_MSK				(0x1 << I2C_CR1_STOP_POS)
+#define I2C_CR1_STOP					(I2C_CR1_STOP_MSK)
+
+#define I2C_SR1_SB_POS					(0U)
+#define I2C_SR1_SB_MSK					(0x1 << I2C_SR1_SB_POS)
+#define I2C_SR1_SB						(I2C_SR1_SB_MSK)
+
+#define I2C_SR1_ADRR_POS				(1U)
+#define I2C_SR1_ADRR_MSK				(0x1 << I2C_SR1_ADRR_POS)
+#define I2C_SR1_ADRR					(I2C_SR1_ADRR_MSK)
+
+#define I2C_SR1_BTF_POS					(2U)
+#define I2C_SR1_BTF_MSK					(0x1 << I2C_SR1_BTF_POS)
+#define I2C_SR1_BTF						(I2C_SR1_BTF_MSK)
+
+#define I2C_SR1_RXNE_POS				(6U)
+#define I2C_SR1_RXNE_MSK				(0x1 << I2C_SR1_RXNE_POS)
+#define I2C_SR1_RXNE					(I2C_SR1_RXNE_MSK)
+
+#define I2C_SR1_TXE_POS					(7U)
+#define I2C_SR1_TXE_MSK					(0x1 << I2C_SR1_TXE_POS)
+#define I2C_SR1_TXE						(I2C_SR1_TXE_MSK)
+
 
 
 
