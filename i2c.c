@@ -30,6 +30,7 @@ void I2C_Init(I2C_HandleTypedef_t *I2C_Handle)
 	{
 		uint32_t temp = 0x0U;
 		uint32_t freqValue = 0x0U;
+		uint16_t ccrValue = 0x0U;
 
 		// ACK State	Stretch Mode
 		temp = I2C_Handle->Instance->CR1;
@@ -58,7 +59,40 @@ void I2C_Init(I2C_HandleTypedef_t *I2C_Handle)
 			temp|= (I2C_Handle->Init->MyOwnAddress << 0U);
 		}
 
+		I2C_Handle->Instance->OAR1 = temp;
 
+		// CCR Calculations
+
+		temp = 0;
+		if(I2C_Handle->Init->ClockSpeed <= I2C_SPEED_STANDART)
+		{
+			// standard mode
+			ccrValue = (pClock / (2 * I2C_Handle->Init->ClockSpeed));
+			temp |= (I2C_DUTY_STANDART);
+			temp |= (ccrValue & 0xFFF);
+
+
+		}
+		else
+		{
+			// fast mode
+			if(I2C_Handle->Init->DutyCycle == I2C_DUTY_FAST_2)
+			{
+				// Duty 2
+				temp |= (I2C_DUTY_FAST_2);
+				ccrValue = (pClock / (3 * I2C_Handle->Init->ClockSpeed));
+			}
+			else
+			{
+				// Duty 16 : 9
+				temp |= (I2C_DUTY_FAST_16_2);
+				ccrValue = (pClock / (25 * I2C_Handle->Init->ClockSpeed));
+			}
+
+			temp |= (ccrValue & 0xFFFU);
+		}
+
+		I2C_Handle->Instance->CCR = temp;
 	}
 
 }

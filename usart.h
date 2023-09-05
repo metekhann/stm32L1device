@@ -135,6 +135,7 @@ void USART_Transmit(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint16_
 void USART_Receive(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint16_t dataSize);
 void USART_Transmit_IT(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint16_t dataSize);
 void USART_Receive_IT(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint16_t dataSize);
+void USART_RxCallback(USART_HandleTypedef_t *USART_Handle);
 void USART_InterruptHandler(USART_HandleTypedef_t *USART_Handle);
 
 

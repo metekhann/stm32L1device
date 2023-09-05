@@ -17,9 +17,10 @@ uint32_t RCC_GetSystemClock()
 
 	switch(clkSource)
 	{
-	case 0: SystemCoreClock = 16000000; break;
-	case 1: SystemCoreClock = 8000000; break;
-	default : SystemCoreClock = 16000000; break;
+	case 0: SystemCoreClock = 2097000U; break; 			// MSI Clock Default Value
+	case 1: SystemCoreClock = 16000000U; break;			// HSI Clock Default Value
+	case 2: SystemCoreClock = 8000000U; break;
+	default : SystemCoreClock = 16000000U; break;
 
 	}
 

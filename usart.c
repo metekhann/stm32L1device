@@ -16,6 +16,7 @@ static void closeUSART_Tx_ISR(USART_HandleTypedef_t *USART_Handle)
 	USART_Handle->Instance->CR1 &= ~(USART_CR1_TXEIE);
 
 }
+
 static void closeUSART_Rx_ISR(USART_HandleTypedef_t *USART_Handle)
 {
 	USART_Handle->pRxBuffer = NULL;
@@ -24,6 +25,7 @@ static void closeUSART_Rx_ISR(USART_HandleTypedef_t *USART_Handle)
 
 	USART_Handle->Instance->CR1 &= ~(USART_CR1_RXNEIE);
 }
+
 static void USART_Send_IT(USART_HandleTypedef_t *USART_Handle)
 {
 	if((USART_Handle->Init.WordLenght == USART_WORDLENGHT_9BITS) && (USART_Handle->Init.Parity == USART_PARITY_NONE))
@@ -93,6 +95,7 @@ static void USART_Read_IT(USART_HandleTypedef_t *USART_Handle)
 	if(USART_Handle->RxBufferSize == 0)
 	{
 		closeUSART_Rx_ISR(USART_Handle);
+		USART_RxCallback(USART_Handle);
 	}
 }
 
@@ -133,28 +136,28 @@ void USART_Init(USART_HandleTypedef_t *USART_Handle)
 
 	if(USART_Handle->Init.OverSampling == USART_OVERSAMPLING_8)
 	{
-		USART_Handle->Instance->BRR = UART_BRR_SAMPLING8(periphClk, USART_Handle->Init.BaudRate);
+		//USART_Handle->Instance->BRR = UART_BRR_SAMPLING8(periphClk, USART_Handle->Init.BaudRate);
 		//USART_Handle->Instance->BRR = __UART_BRR_OVERSAMPLING_8(periphClk, USART_Handle->Init.BaudRate);
-		/*USART_DIV_Value = __UART_BRR_OVERSAMPLING_8(periphClk, USART_Handle->Init.BaudRate);
+		USART_DIV_Value = __UART_BRR_OVERSAMPLING_8(periphClk, USART_Handle->Init.BaudRate);
 		mantissaPart = (USART_DIV_Value / 100U);
 		fractionPart = (USART_DIV_Value) - (mantissaPart * 100U);
-		fractionPart = (((fractionPart * 8U) + 50U) / 100U) & (0x07U);*/
+		fractionPart = (((fractionPart * 8U) + 50U) / 100U) & (0x07U);
 
 
 	}
 	else
 	{
-		USART_Handle->Instance->BRR = UART_BRR_SAMPLING16(periphClk, USART_Handle->Init.BaudRate);
+		//USART_Handle->Instance->BRR = UART_BRR_SAMPLING16(periphClk, USART_Handle->Init.BaudRate);
 		//USART_Handle->Instance->BRR = __UART_BRR_OVERSAMPLING_16(periphClk, USART_Handle->Init.BaudRate);
-		/*USART_DIV_Value = __UART_BRR_OVERSAMPLING_16(periphClk, USART_Handle->Init.BaudRate);
+		USART_DIV_Value = __UART_BRR_OVERSAMPLING_16(periphClk, USART_Handle->Init.BaudRate);
 		mantissaPart = (USART_DIV_Value / 100U);
 		fractionPart = (USART_DIV_Value) - (mantissaPart * 100U);
-		fractionPart = (((fractionPart * 16U) + 50U) / 100U) & (0x0FU);*/
+		fractionPart = (((fractionPart * 16U) + 50U) / 100U) & (0x0FU);
 	}
 
-	/*temp |= (mantissaPart << 4U);
+	temp |= (mantissaPart << 4U);
 	temp |= (fractionPart << 0U);
-	USART_Handle->Instance->BRR = temp;*/
+	USART_Handle->Instance->BRR = temp;
 }
 
 void USART_Enable(USART_HandleTypedef_t *USART_Handle , FunctionalState_t State)
@@ -283,6 +286,12 @@ void USART_Receive_IT(USART_HandleTypedef_t *USART_Handle, uint8_t *pData, uint1
 	}
 
 }
+
+__attribute__((weak)) void USART_RxCallback(USART_HandleTypedef_t *USART_Handle)
+{
+
+}
+
 void USART_InterruptHandler(USART_HandleTypedef_t *USART_Handle)
 {
 	uint8_t flagValue = 0;
@@ -303,5 +312,4 @@ void USART_InterruptHandler(USART_HandleTypedef_t *USART_Handle)
 		{
 			USART_Handle->rxISR_Function(USART_Handle);
 		}
-
 }

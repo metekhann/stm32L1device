@@ -22,7 +22,7 @@
 #define SET_BIT(REG, BIT)			( (REG) |= (BIT) )
 #define CLEAR_BIT(REG, BIT)			( (REG) &= ~(BIT) )
 #define READ_BIT(REG, BIT)			( (REG) & (BIT) )
-#define UNUSED(x)					(void)x
+#define UNUSED(x)					((void)x)
 #define __IO volatile
 
 typedef enum
@@ -43,7 +43,7 @@ typedef enum
 	EXTI3_IRQNumber = 9,
 	EXTI4_IRQNumber = 10,
 	SPI2_IRQNumber = 36,
-	USART2_IRQNumber =37,
+	USART1_IRQNumber =37,
 	EXTI15_10_IRQNumber = 40
 
 
